@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import RightSidebar from "./components/RightSidebar";
 import NewsFeed from "./components/NewsFeed";
-import Profile from "./components/Profile";
+import ProfileEnhanced from "./components/ProfileEnhanced";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
       case 'home':
         return <NewsFeed />;
       case 'profile':
-        return <Profile />;
+        return <ProfileEnhanced />;
       case 'friends':
         return (
           <div className="max-w-2xl mx-auto p-6">
