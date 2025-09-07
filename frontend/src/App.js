@@ -1,50 +1,83 @@
-import { useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import RightSidebar from "./components/RightSidebar";
+import NewsFeed from "./components/NewsFeed";
+import Profile from "./components/Profile";
+import { Toaster } from "./components/ui/toaster";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+function App() {
+  const [activeTab, setActiveTab] = useState('home');
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+  const renderMainContent = () => {
+    switch (activeTab) {
+      case 'home':
+        return <NewsFeed />;
+      case 'profile':
+        return <Profile />;
+      case 'friends':
+        return (
+          <div className="max-w-2xl mx-auto p-6">
+            <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Friends</h2>
+              <p className="text-gray-600">Friend management features coming soon!</p>
+            </div>
+          </div>
+        );
+      case 'messages':
+        return (
+          <div className="max-w-2xl mx-auto p-6">
+            <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Messages</h2>
+              <p className="text-gray-600">Messaging features coming soon!</p>
+            </div>
+          </div>
+        );
+      case 'groups':
+        return (
+          <div className="max-w-2xl mx-auto p-6">
+            <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Groups</h2>
+              <p className="text-gray-600">Group features coming soon!</p>
+            </div>
+          </div>
+        );
+      case 'marketplace':
+        return (
+          <div className="max-w-2xl mx-auto p-6">
+            <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Marketplace</h2>
+              <p className="text-gray-600">Marketplace features coming soon!</p>
+            </div>
+          </div>
+        );
+      default:
+        return <NewsFeed />;
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
-
-function App() {
-  return (
-    <div className="App">
+    <div className="App min-h-screen bg-gray-50">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route 
+            path="/*" 
+            element={
+              <>
+                <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+                <div className="flex">
+                  <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+                  <main className="flex-1 p-4">
+                    {renderMainContent()}
+                  </main>
+                  <RightSidebar />
+                </div>
+                <Toaster />
+              </>
+            } 
+          />
         </Routes>
       </BrowserRouter>
     </div>
