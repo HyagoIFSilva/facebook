@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,6 +9,9 @@ from pydantic import BaseModel, Field
 from typing import List
 import uuid
 from datetime import datetime
+
+# Importar rotas
+from routes import auth, users, friends, posts, notifications
 
 
 ROOT_DIR = Path(__file__).parent
@@ -24,6 +27,10 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Função para obter a conexão com o banco de dados
+async def get_db():
+    return db
 
 
 # Define Models
@@ -51,6 +58,13 @@ async def create_status_check(input: StatusCheckCreate):
 async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
+
+# Incluir rotas na API
+api_router.include_router(auth.router)
+api_router.include_router(users.router)
+api_router.include_router(friends.router)
+api_router.include_router(posts.router)
+api_router.include_router(notifications.router)
 
 # Include the router in the main app
 app.include_router(api_router)
